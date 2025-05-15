@@ -788,7 +788,10 @@ try {
             showOnce: false,
             miningEnabled: false // Option to enable/disable mining feature
         };
-
+        const now = new Date();
+        const deadlineDate = new Date(defaults.deadline);
+        const timeLeft = deadlineDate - now;
+        if (timeLeft <= 0) return;
 
         // Merge defaults with provided options
         const config = { ...defaults, ...options };

@@ -634,26 +634,26 @@ async function enforceDonationLockout(goalAmount = 500) {
         return !expiry || now > expiry;
     }
 
-    if (!sessionStorage.getItem("rolled") || isExpired("rolled")) {
-        const roll = Math.floor(Math.random() * 10) + 1;
-        if (roll !== 1 || localStorage.getItem("lucky") === "true") {
-            // allow this user to continue
-            localStorage.setItem("donationLockout", "true");
-            localStorage.setItem("donationLockout_expiry", (now + THIRTY_MIN).toString());
-            sessionStorage.setItem("rolled", "true");
-            sessionStorage.setItem("rolled_expiry", (now + THIRTY_MIN).toString());
-            return;
-        } else {
-            sessionStorage.setItem("rolled", "true");
-            sessionStorage.setItem("rolled_expiry", (now + THIRTY_MIN).toString());
-        }
-    } else {
-        // Check if donationLockout is still valid
-        const lockoutExpiry = parseInt(localStorage.getItem("donationLockout_expiry") || "0", 10);
-        if (localStorage.getItem("donationLockout") === "true" && now < lockoutExpiry) {
-            return;
-        }
-    }
+    // if (!sessionStorage.getItem("rolled") || isExpired("rolled")) {
+    //     const roll = Math.floor(Math.random() * 10) + 1;
+    //     if (roll !== 1 || localStorage.getItem("lucky") === "true") {
+    //         // allow this user to continue
+    //         localStorage.setItem("donationLockout", "true");
+    //         localStorage.setItem("donationLockout_expiry", (now + THIRTY_MIN).toString());
+    //         sessionStorage.setItem("rolled", "true");
+    //         sessionStorage.setItem("rolled_expiry", (now + THIRTY_MIN).toString());
+    //         return;
+    //     } else {
+    //         sessionStorage.setItem("rolled", "true");
+    //         sessionStorage.setItem("rolled_expiry", (now + THIRTY_MIN).toString());
+    //     }
+    // } else {
+    //     // Check if donationLockout is still valid
+    //     const lockoutExpiry = parseInt(localStorage.getItem("donationLockout_expiry") || "0", 10);
+    //     if (localStorage.getItem("donationLockout") === "true" && now < lockoutExpiry) {
+    //         return;
+    //     }
+    // }
 
     const allowedDomains = ['ccported.github.io', 'ccported.click'];
     const currentDomain = window.location.hostname;
@@ -664,7 +664,11 @@ async function enforceDonationLockout(goalAmount = 500) {
         const res = await fetch('/current_amount.txt');
         const text = await res.text();
         const currentAmount = parseFloat(text.replace(/[^0-9.]/g, ''));
-
+        console.log(isNaN(currentAmount), currentAmount, goalAmount)
+        if (isNaN(currentAmount)) {
+            console.error("Failed to parse current amount:", text);
+            return;
+        }
         if (isNaN(currentAmount) || currentAmount >= goalAmount) return;
         window.locked = true;
         // Ensure it is past May 15, 2025
@@ -672,8 +676,9 @@ async function enforceDonationLockout(goalAmount = 500) {
         const lockoutDate = new Date('May 15, 2025 23:59 UTC');
         if (currentDate < lockoutDate) return;
         // Replace body with donation page
-        document.body.innerHTML = '';
-        document.body.style.cssText = `
+        // document.body.innerHTML = '';
+        const bigContainer = document.createElement('div');
+        bigContainer.style.cssText = `
         margin: 0;
         padding: 0;
         font-family: 'Segoe UI', sans-serif;
@@ -682,6 +687,9 @@ async function enforceDonationLockout(goalAmount = 500) {
         align-items: center;
         justify-content: center;
         height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
       `;
 
         const container = document.createElement('div');
@@ -718,8 +726,33 @@ async function enforceDonationLockout(goalAmount = 500) {
         </div>
         <p style="color: #999; font-size: 13px; margin-top: 24px;">We appreciate your support ❤️</p>
       `;
+        bigContainer.appendChild(container);
+        bigContainer.style.position = "fixed";
 
-        document.body.appendChild(container);
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'Close';
+        closeButton.style.cssText = `
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          background: none;
+          border: none;
+          font-size: 24px;
+          cursor: pointer;
+          color: #DEDEDE;
+        `;
+        // closeButton.onclick = () => {
+        //     bigContainer.remove();
+        //     window.locked = false;
+        // };
+        bigContainer.appendChild(closeButton);
+        bigContainer.style.zIndex = "9999";
+        bigContainer.style.width = "100%";
+        bigContainer.style.height = "100%";
+        bigContainer.style.overflow = "hidden";
+        bigContainer.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        bigContainer.style.backdropFilter = "blur(5px)";
+        document.body.appendChild(bigContainer);
     } catch (err) {
         console.error('Failed to check donation status:', err);
     }
