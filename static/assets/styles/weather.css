@@ -10,8 +10,8 @@ body {
     margin-top: 100px;
     display: grid;
     gap: 20px;
-    min-width: 70% !important;
-    padding: 15p;
+    min-width: 80% !important;
+    padding: 15px;
 }
 
 .current-weather {
@@ -19,6 +19,30 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.r,
+.l {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#weather-chart-container {
+    width: 100%;
+    max-width: 560px;
+    height: 320px;
+    margin: 30px auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #ffffff;
 }
 
 .forecast {
@@ -70,4 +94,23 @@ body {
     font-weight: bold;
     color: #444;
     margin-bottom: 5px;
+}
+
+@media screen and (max-width: 768px) {
+    .current-weather {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .r,
+    .l {
+        align-items: center;
+        text-align: center;
+    }
+
+    #weather-chart-container {
+        width: 100%;
+        height: 250px;
+    }
+    
 }
