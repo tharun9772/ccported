@@ -237,7 +237,7 @@ self.addEventListener('fetch', event => {
     // Choose caching strategy based on request type
     if (isCacheableRequest(request)) {
         // For most game assets, use time-aware cache-first
-        if (request.url.includes('/games/game-')) {
+        if (request.url.includes('game-')) {
             event.respondWith(timeAwareCacheFirstStrategy(request));
         }
         // For HTML and JSON files, use network-first to get latest versions
