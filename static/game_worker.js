@@ -108,27 +108,9 @@ function isCacheableRequest(request) {
     if (request.method !== 'GET') {
         return false;
     }
-    // Cache based on file extensions
-    const extensions = [
-        '.html', '.js', '.css', '.json',
-        '.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg',
-        '.woff', '.woff2', '.ttf', '.otf',
-        '.mp3', '.ogg', '.wav',
-        '.mp4', '.webm', 
-        '.spritemap', '.bitmap', '.map', '.bit', '.obj', '.wasm',
-        '.rom', '.nes', '.sfc', '.gbc', '.gba', '.smc', '.gen', '.z64',
-        '.n64', '.v64', '.z64', '.iso', '.cue', '.bin', '.img',
-        '.apk', '.ipa', '.exe', '.msi', '.dmg', '.deb', '.rpm',
-        '.zip', '.tar', '.gz', '.bz2', '.xz', '.7z',
-        '.font', '.eot', '.ttc', '.woff2', '.woff', '.svgz',
-        // atp just cache everything it revalidates every 7 days no update is that important
-    ];
 
-    if (extensions.some(ext => url.pathname.endsWith(ext))) {
-        return true;
-    }
-
-    return false;
+    // Blacklist, not whitelist
+    return true;
 }
 
 // Network-first strategy with fallback to cache
