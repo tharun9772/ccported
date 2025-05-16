@@ -335,11 +335,10 @@ try {
         }
         if (window.ccPorted.adBlockEnabled && window.ccPorted.aHost) {
             createModal({
-                heading: (sessionStorage.getItem("clicked_disable_adblocker") == 'true') ? 'You frickin liar' : "Please disable adblocker",
-                description: (sessionStorage.getItem("clicked_disable_adblocker") == 'true') ? 'This goin keep popping up until you disable (pretty please)' : "CCPorted is broke gang.... Please disable your adblocker to use the site.",
-                cta: (sessionStorage.getItem("clicked_disable_adblocker") == 'true') ? "I've disabled my adblocker (for reals)" : "I've disabled my adblocker (don't lie gang or ts will keep popping up)",
+                heading: "Please disable adblocker",
+                description: "Please disable your adblocker to use the site.",
+                cta: "I've disabled my adblocker",
                 closeFn: () => {
-                    sessionStorage.setItem("clicked_disable_adblocker", "true");
                 }
             })
         }

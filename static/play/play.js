@@ -101,7 +101,7 @@
             } else if (data.action === "CACHE_ENABLED") {
                 // Acknowledged (not an unknown action, but nothing to do)
                 // NOTE: FOR CACHE ACTIONS, ADD "TYPE": "CACHE_CONTROL" so that it is not confused with auth flow.
-             } else {
+            } else {
                 // Handle unknown action
                 event.source.postMessage({
                     action: "UNKNOWN_ACTION",
@@ -133,6 +133,30 @@
             const item = data.Item;
             if (item) {
                 document.title = item.fName;
+                if (item.proxy) {
+                    // check if on proxy host
+                    (async () => {
+                        const proxyHosts = await fetch("/phosts.txt");
+                        const proxyHostsText = await proxyHosts.text();
+                        const proxyHostsList = proxyHostsText.split("\n");
+                        const proxyHost = proxyHostsList.find((host) => {
+                            return host.split(',')[0].trim() == window.location.hostname;
+                        });
+                        if (proxyHost) {
+                            // on proxy host
+                            console.log("Proxy host detected");
+                            const sub = proxyHost.split(",")[1].trim();
+                            const host = proxyHost.split(",")[0].trim();
+                            const path = proxyHost.split(",")[2].trim();
+                            const domain = `https://${sub}.${host}/${path}/${item.proxyPath}`
+                            iframe.src = `${domain}`;
+                        } else {
+                            // not on proxy host
+                            console.log("Not a proxy host");
+                            iframe.src = `https://${item.proxy}${gameID}/index.html`;
+                        }
+                    })()
+                }
                 // add favicon
                 // var link = document.querySelector("link[rel~='icon']");
                 // if (!link) {
