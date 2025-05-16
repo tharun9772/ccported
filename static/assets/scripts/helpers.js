@@ -741,10 +741,24 @@ async function enforceDonationLockout(goalAmount = 500) {
           cursor: pointer;
           color: #DEDEDE;
         `;
-        // closeButton.onclick = () => {
-        //     bigContainer.remove();
-        //     window.locked = false;
-        // };
+        closeButton.onclick = () => {
+            bigContainer.remove();
+            window.locked = false;
+        };
+        bigContainer.onclick = (e) => {
+            if (e.target === bigContainer) {
+                bigContainer.remove();
+                window.locked = false;
+            }
+        }
+        const escListener = (e) => {
+            if (e.key === 'Escape') {
+            bigContainer.remove();
+            document.removeEventListener('keydown', escListener);
+            window.locked = false;
+            }
+        };
+        document.addEventListener('keydown', escListener);
         bigContainer.appendChild(closeButton);
         bigContainer.style.zIndex = "9999";
         bigContainer.style.width = "100%";
