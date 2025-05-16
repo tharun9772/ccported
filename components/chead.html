@@ -1,18 +1,25 @@
-<script src = "/assets/scripts/monuloader.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      // Register the service worker from the root path
+      navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        .then(registration => {
+          console.log('Game service worker registered:', registration);
+        })
+        .catch(error => {
+          console.error('Service worker registration failed:', error);
+        });
+    });
+  }
+</script>
+<script src="/assets/scripts/monuloader.js"></script>
 <gtag />
-<link rel = "icon" href = "/assets/images/logo.jpg" />
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, maximum-scale=1"
-/>
+<link rel="icon" href="/assets/images/logo.jpg" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="/assets/styles/home.css" />
 <link rel="stylesheet" href="/assets/styles/master.css" />
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
   integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-/>
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
 <title>{{title}}</title>
 <script src="/assets/scripts/navigation.js"></script>

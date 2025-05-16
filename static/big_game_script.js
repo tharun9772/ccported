@@ -36,6 +36,8 @@ window.ccPorted = window.ccPorted || {};
                     console.error('Service worker registration failed:', error);
                 });
         });
+    } else {
+        console.warn('Service workers are not supported in this browser.');
     }
     // Setup communication with the parent frame for cache control
     function setupCacheControl() {
