@@ -768,6 +768,9 @@ async function enforceDonationLockout(goalAmount = 500) {
         bigContainer.style.overflow = "hidden";
         bigContainer.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
         bigContainer.style.backdropFilter = "blur(5px)";
+        await new Promise((r) => {
+            window.addEventListener("load", r);
+        });
         document.body.appendChild(bigContainer);
     } catch (err) {
         console.error('Failed to check donation status:', err);

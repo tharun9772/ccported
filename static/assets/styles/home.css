@@ -24,9 +24,10 @@ body {
 header h1 {
   text-align: center;
   color: #333;
-  background-color: #fff;
   margin: 0;
   font-size: 48px;
+  transition: font-size 0.3s ease;
+  background-color: transparent !important;
 }
 
 header h1 a {
@@ -40,7 +41,7 @@ header {
   justify-content: space-around;
   align-items: center;
   padding: 20px 0;
-  background-color: #ffffff;
+  background-color: #ffffff92;
   position: fixed;
   width: 100%;
   right: 0;
@@ -48,13 +49,22 @@ header {
   z-index: 7500;
   top: 0;
   box-sizing: border-box;
+  backdrop-filter: blur(10px);
   height: 100px;
-}
+  transition: height 0.3s ease;
 
+}
+header.collapsed {
+  transition: height 0.3s ease;
+  height: 50px;
+}
+header.collapsed h1 {
+  transition: font-size 0.3s ease;
+  font-size: 32px;
+}
 header.shadow {
   box-shadow: 0px 0px 10px #333;
 }
-
 .container {
     margin-top: 100px;
     padding: 0px;
