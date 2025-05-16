@@ -34,7 +34,7 @@ async function loadAds() {
     let x = await detectAdBlockEnabled();
     window.ccPorted.adBlockEnabled = x;
     window.ccPorted.adsEnabled = await adsEnabled();
-    if (window.ccPorted.adsEnabled) {
+    if (window.ccPorted.adsEnabled) {   
         const script = document.createElement('script');
         script.src = '//monu.delivery/site/e/4/500442-526a-41af-9981-22db9286cd37.js';
         script.setAttribute('data-cfasync', 'false');
