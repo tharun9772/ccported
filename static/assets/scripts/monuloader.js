@@ -18,14 +18,18 @@ async function adsEnabled() {
         const hosts = text.split('\n');
         window.ccPorted.aHosts = hosts.map(h => h.trim());
         if (window.ccPorted.aHosts.includes(window.location.hostname)) {
+            window.ccPorted.aHost = true;
             return !isAdBlockEnabled;
         } else {
+            window.ccPorted.aHost = false;
             return false;
         }
     } else {
         if (window.ccPorted.aHosts.includes(window.location.hostname)) {
+            window.ccPorted.aHost = true;
             return !isAdBlockEnabled;
         } else {
+            window.ccPorted.aHost = false;
             return false;
         }
     }
