@@ -700,6 +700,7 @@ async function enforceDonationLockout(goalAmount = 500) {
         border-radius: 16px;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
         text-align: center;
+        color: #333;
       `;
 
         container.innerHTML = `
@@ -707,9 +708,10 @@ async function enforceDonationLockout(goalAmount = 500) {
         <p style="color: #555; font-size: 16px; margin-bottom: 16px;">
           We did not meet our donation goal of $${goalAmount}. CCPorted may shut down unless we can raise more support. If this site has helped you access or enjoy games, please consider donating.
         </p>
-        <p style="font-weight: bold; margin-bottom: 16px;">
+        <p style="font-weight: bold; margin-bottom: 16px; color: #333;">
           Current Raised: $${currentAmount.toFixed(2)} / $${goalAmount}
         </p>
+        <p>PS: <b><a href = "https://discord.gg/GDEFRBTT3Z">HAVE YOU JOINED THE DISCORD?</a></b></p>
         <a href="https://ko-fi.com/ccported" target="_blank" style="
           display: block;
           background-color: #29abe0;

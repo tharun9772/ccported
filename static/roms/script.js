@@ -47,7 +47,7 @@ async function listRoms() {
         setupSearch();
     } catch (error) {
         console.error('Error loading ROMs:', error);
-        document.querySelector('.container').innerHTML = `
+        document.querySelector('.r-container').innerHTML = `
              <div class="error">
                  Error loading ROMs. Please try again later.
                  <br>
@@ -61,7 +61,7 @@ async function listRoms() {
 async function displayRoms(roms) {
     await window.ccPorted.userPromise;
     document.getElementById("searchInput").placeholder = `Search ${foundRoms} ROMs...`;
-    const container = document.querySelector('.container');
+    const container = document.querySelector('.r-container');
     container.innerHTML = Object.entries(roms)
         .map(([console, romList]) => `
              <div class="determiner">

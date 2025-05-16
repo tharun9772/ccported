@@ -27,7 +27,7 @@
     });
     iframe.addEventListener("load", async (e) => {
         const w = iframe.contentWindow;
-        if(window.ccPorted.userPromise){
+        if (window.ccPorted.userPromise) {
             await window.ccPorted.userPromise;
         } else {
             console.log("User promise does not exist. This should not happen. Anyways not setting user tokens (unless between the running time of this and the next if statement the user suddenly defines itself");
@@ -98,7 +98,10 @@
             } else if (data.action === "SWITCH_SERVER") {
                 console.log("OVERALL XXX", data)
                 updateIframe(data.server);
-            } else {
+            } else if (data.action === "CACHE_ENABLED") {
+                // Acknowledged (not an unknown action, but nothing to do)
+                // NOTE: FOR CACHE ACTIONS, ADD "TYPE": "CACHE_CONTROL" so that it is not confused with auth flow.
+             } else {
                 // Handle unknown action
                 event.source.postMessage({
                     action: "UNKNOWN_ACTION",
@@ -139,7 +142,7 @@
                 // }
                 // changeFavicon(`https://d1yh00vn2fvto7.cloudfront.net/games/${gameID}${item.thumbPath}`);
                 setDescription(item.description + " Play now on CCPorted!");
-                if(window.gtag) {
+                if (window.gtag) {
                     window.gtag("event", "game_loaded", {
                         gameID: gameID,
                         gameName: item.fName,

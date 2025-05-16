@@ -74,8 +74,9 @@ a:visited {
 .determiner > ul {
     margin-left: 30px;
 }
-div.container {
+div.r-container {
     width: 500px;
+
 }
 .loading {
     text-align: center;
@@ -148,4 +149,12 @@ body.dark .loading {
     height: 100%;
     background-color: #000000;
     transition: width 0.4s ease-in-out;
+}
+.b-container {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }

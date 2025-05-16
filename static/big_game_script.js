@@ -1,4 +1,5 @@
 window.ccPorted = window.ccPorted || {};
+
 (() => {
     const COGNITO_DOMAIN = "https://us-west-2lg1qptg2n.auth.us-west-2.amazoncognito.com";
     const CLIENT_ID = "4d6esoka62s46lo4d398o3sqpi";
@@ -10,7 +11,68 @@ window.ccPorted = window.ccPorted || {};
     const gameIDExtract = gameIDExtractRG.exec(window.location.pathname);
     const parentOrigin = (framed && document.location.ancestorOrigins.length > 0) ? new URL(document.location.ancestorOrigins[0]).origin : null;
     const gameID = (typeof window.ccPorted.gameID != "undefined" && window.ccPorted.gameID != "undefined") ? window.ccPorted.gameID : false || window.gameID || ((gameIDExtract) ? gameIDExtract[1] : "Unknown Game");
+    // Register service worker immediately
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            // Register the service worker from the root path
+            navigator.serviceWorker.register('/game_worker.js', { scope: '/' })
+                .then(registration => {
+                    console.log('Game service worker registered:', registration);
 
+                    // Detect if this game is running in an iframe
+                    const isInIframe = window !== window.top;
+                    if (isInIframe) {
+                        // Notify parent frame that we support caching
+                        window.parent.postMessage({
+                            action: 'CACHE_ENABLED',
+                            gameId: gameID
+                        }, '*');
+
+                        // Setup communication channel with parent frame
+                        setupCacheControl();
+                    }
+                })
+                .catch(error => {
+                    console.error('Service worker registration failed:', error);
+                });
+        });
+    }
+    // Setup communication with the parent frame for cache control
+    function setupCacheControl() {
+        window.addEventListener('message', event => {
+            // Verify the origin
+            if (event.origin !== parentOrigin) return;
+            if (!event.data || !event.data.action) return;
+            // Only handle cache-control requests
+            if (event.data.type !== 'CACHE_CONTROL') return;
+            switch (event.data.action) {
+                case 'CLEAR_CACHE':
+                    // Clear the cache through the service worker
+                    if (navigator.serviceWorker.controller) {
+                        const messageChannel = new MessageChannel();
+                        messageChannel.port1.onmessage = event => {
+                            console.log('Cache cleared:', event.data);
+                        };
+
+                        navigator.serviceWorker.controller.postMessage({
+                            action: 'CLEAR_CACHE'
+                        }, [messageChannel.port2]);
+                    }
+                    break;
+
+                case 'CACHE_STATUS':
+                    // Report cache status back to parent
+                    navigator.serviceWorker.getRegistration().then(registration => {
+                        event.source.postMessage({
+                            action: 'CACHE_STATUS_RESPONSE',
+                            active: !!registration?.active,
+                            size: null // We don't have an easy way to measure cache size
+                        }, event.origin);
+                    });
+                    break;
+            }
+        });
+    }
     class Leaderboard {
         constructor(gameID) {
             if (!gameID) {

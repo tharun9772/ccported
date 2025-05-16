@@ -56,11 +56,13 @@ header.shadow {
 }
 
 .container {
-  margin-top: 100px;
-  padding: 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    margin-top: 100px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
 }
 
 .search {

@@ -24,11 +24,10 @@ function onload() {
     }
 }
 
-
-const header = document.querySelector('header');
-if (header) {
-    // Header animation
-    document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
+    const header = document.querySelector('header');
+    if (header) {
+        // Header animation
         onload();
         // Hamburger menu functionality
         const hamburger = document.createElement('div');
@@ -129,30 +128,30 @@ if (header) {
                 updateHeader();
             }, 250);
         });
-    });
-    window.addEventListener('scroll', () => {
-        const header = document.querySelector('header');
-        if (window.scrollY > scrollThreshold) {
-            header.classList.add('shadow');
-        } else {
-            header.classList.remove('shadow');
-        }
-        // check if ad is visible
-        const ads = document.querySelectorAll(".tad");
-        ads.forEach(ad => {
-            if (ad.getAttribute("data-loaded-check") == "true") return;
-            if (ad.getBoundingClientRect().top < window.innerHeight) {
-                // allow a 5s loading grace period
-                setTimeout(() => {
-                    // check if ad loaded (will have Iframe)
-                    if (ad.querySelector("iframe")) {
-                        ad.setAttribute("data-loaded-check", "true");
-                        ad.style.backgroundImage = "none";
-                    } else {
-                        ad.remove();
-                    }
-                }, 5000)
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > scrollThreshold) {
+                header.classList.add('shadow');
+            } else {
+                header.classList.remove('shadow');
             }
+            // check if ad is visible
+            const ads = document.querySelectorAll(".tad");
+            ads.forEach(ad => {
+                if (ad.getAttribute("data-loaded-check") == "true") return;
+                if (ad.getBoundingClientRect().top < window.innerHeight) {
+                    // allow a 5s loading grace period
+                    setTimeout(() => {
+                        // check if ad loaded (will have Iframe)
+                        if (ad.querySelector("iframe")) {
+                            ad.setAttribute("data-loaded-check", "true");
+                            ad.style.backgroundImage = "none";
+                        } else {
+                            ad.remove();
+                        }
+                    }, 5000)
+                }
+            });
         });
-    });
-}
+    }
+});
