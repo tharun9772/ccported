@@ -95,7 +95,10 @@ self.addEventListener('activate', event => {
 // Helper function to determine if a request should be cached
 function isCacheableRequest(request) {
     const url = new URL(request.url);
-
+    const params = new URLSearchParams(url.search);
+    if (params.has('cache') && params.get('cache') === 'false' || params.has('cacheBust') || params.has('cachebust') || params.has('bust')) {
+        return false; // Cache-busting query parameter
+    }
     // Never cache txt files, change often
     if (url.pathname.endsWith('.txt')) {
         return false;
