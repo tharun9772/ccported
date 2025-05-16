@@ -5,7 +5,7 @@ const MAX_AGE_DAYS = 7; // Revalidate files older than 7 days
 
 // Assets to cache immediately on service worker installation
 const PRECACHE_ASSETS = [
-    './index.html'
+    
 ];
 
 // Helper function to get the cache metadata store
