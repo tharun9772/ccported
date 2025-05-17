@@ -776,4 +776,4 @@ async function enforceDonationLockout(goalAmount = 500) {
         console.error('Failed to check donation status:', err);
     }
 }
-enforceDonationLockout();  
+//enforceDonationLockout();  
