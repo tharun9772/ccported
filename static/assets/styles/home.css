@@ -114,6 +114,10 @@ header.shadow {
 .cards.rows .inxxx.grid {
   display: none;
 } 
+.cloud .card.grid {
+  width: 510px;
+  height: 350px;
+}
 .card.grid {
   width: 320px;
   height: 220px;
