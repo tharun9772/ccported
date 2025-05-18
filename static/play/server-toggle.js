@@ -10,7 +10,7 @@ class ServerToggle {
         this.itemHeight = 60; // Height of each server item
         this.visibleItems = 5; // Number of visible items in the wheel
         this.switchCallback = switchCallback;
-
+        this.enabled = true;
         this.init();
     }
 
@@ -87,6 +87,7 @@ class ServerToggle {
     }
 
     createUI() {
+        if (!this.enabled) return;
         // Create UI container
         this.uiElement = document.createElement('div');
         this.uiElement.className = 'server-toggle-wheel';
@@ -113,6 +114,7 @@ class ServerToggle {
     }
 
     updateUI() {
+        if (!this.enabled) return;
         if (!this.wheelElement) return;
 
         // Clear current wheel
@@ -184,6 +186,7 @@ class ServerToggle {
     }
 
     updateWheelPosition() {
+        if (!this.enabled) return;
         if (!this.wheelElement) return;
 
         // No need to set the transform here - each item has its own transform
@@ -191,6 +194,7 @@ class ServerToggle {
     }
 
     showUI() {
+        if (!this.enabled) return;
         if (!this.uiElement) return;
 
         this.uiVisible = true;
@@ -199,6 +203,7 @@ class ServerToggle {
     }
 
     hideUI() {
+        if (!this.enabled) return;
         if (!this.uiElement) return;
 
         this.uiVisible = false;
@@ -206,16 +211,19 @@ class ServerToggle {
     }
 
     nextServer(hideUI = false) {
+        if (!this.enabled) return;
         this.currentServerIndex = (this.currentServerIndex + 1) % this.servers.length;
         if (!hideUI) this.showUI();
     }
 
     prevServer() {
+        if (!this.enabled) return;
         this.currentServerIndex = (this.currentServerIndex - 1 + this.servers.length) % this.servers.length;
         this.showUI();
     }
 
     setupKeyboardListeners() {
+        if (!this.enabled) return;
         // Track if Ctrl key is pressed
         let ctrlPressed = false;
 

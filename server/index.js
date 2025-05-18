@@ -8,7 +8,7 @@ const morgan = require("morgan");
 console.log("STARTING");
 
 // load the client script in memory
-var clientScript = fs.readFileSync(path.join(__dirname, 'client.js'), 'utf8');
+var clientScript = fs.readFileSync(path.join(__dirname, '../', 'static/big_game_script.js'), 'utf8');
 var config = {
     prefix: "/p/",
     responseMiddleware: [
@@ -18,6 +18,7 @@ var config = {
 var unblocker = new Unblocker(config);
 
 function injectScript(data) {
+    return;
     console.log("INJECTING SCRIPT" + data.url);
     if (data.stream) {
         var injected = false;

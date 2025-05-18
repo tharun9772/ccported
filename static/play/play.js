@@ -145,11 +145,12 @@
                         if (proxyHost) {
                             // on proxy host
                             console.log("Proxy host detected");
-                            const sub = proxyHost.split(",")[1].trim();
                             const host = proxyHost.split(",")[0].trim();
-                            const path = proxyHost.split(",")[2].trim();
-                            const domain = `https://${sub}.${host}/${path}/${item.proxyPath}`
+                            const sub = proxyHost.split(",")[1].trim();
+                            const protocol = proxyHost.split(",")[2].trim();
+                            const domain = `${protocol}://${(sub.length > 0) ? sub + "." : ""}${host}?url=${item.proxyPath}`
                             iframe.src = `${domain}`;
+                            window.serverToggle.enabled = false;
                         } else {
                             // not on proxy host
                             console.log("Not a proxy host");
