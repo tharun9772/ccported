@@ -622,155 +622,33 @@ window.ccPorted.miningLoadPromise = new Promise(async (resolve) => {
     resolve(window.ccPorted.miningEnabled);
 });
 
-
-async function enforceDonationLockout(goalAmount = 500) {
-    // roll a 10 sided die (allow 10% of users to bypass this)
-    const now = Date.now();
-    const THIRTY_MIN = 30 * 60 * 1000;
-
-    // Helper to check expiry
-    function isExpired(key) {
-        const expiry = parseInt(sessionStorage.getItem(key + "_expiry") || "0", 10);
-        return !expiry || now > expiry;
-    }
-
-    // if (!sessionStorage.getItem("rolled") || isExpired("rolled")) {
-    //     const roll = Math.floor(Math.random() * 10) + 1;
-    //     if (roll !== 1 || localStorage.getItem("lucky") === "true") {
-    //         // allow this user to continue
-    //         localStorage.setItem("donationLockout", "true");
-    //         localStorage.setItem("donationLockout_expiry", (now + THIRTY_MIN).toString());
-    //         sessionStorage.setItem("rolled", "true");
-    //         sessionStorage.setItem("rolled_expiry", (now + THIRTY_MIN).toString());
-    //         return;
-    //     } else {
-    //         sessionStorage.setItem("rolled", "true");
-    //         sessionStorage.setItem("rolled_expiry", (now + THIRTY_MIN).toString());
-    //     }
-    // } else {
-    //     // Check if donationLockout is still valid
-    //     const lockoutExpiry = parseInt(localStorage.getItem("donationLockout_expiry") || "0", 10);
-    //     if (localStorage.getItem("donationLockout") === "true" && now < lockoutExpiry) {
-    //         return;
-    //     }
-    // }
-
-    const allowedDomains = ['ccported.github.io', 'ccported.click'];
-    const currentDomain = window.location.hostname;
-
-    if (allowedDomains.includes(currentDomain)) return;
-
+async function enforceDonationLockout() {
     try {
-        const res = await fetch('/current_amount.txt');
-        const text = await res.text();
-        const currentAmount = parseFloat(text.replace(/[^0-9.]/g, ''));
-        console.log(isNaN(currentAmount), currentAmount, goalAmount)
-        if (isNaN(currentAmount)) {
-            console.error("Failed to parse current amount:", text);
+        // Fetch allowed hosts from /ahosts.txt
+        const ahostRes = await fetch("/ahosts.txt");
+        const ahostText = await ahostRes.text();
+        const allowedHosts = ahostText.split("\n").map(host => host.split(",")[0].trim());
+        const currentDomain = window.location.hostname;
+
+        // If current host is not in allowedHosts, show complete lockout and disable access
+        if (!allowedHosts.includes(currentDomain)) {
+            document.body.innerHTML = `
+                <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#111;color:#fff;font-family:sans-serif;text-align:center;">
+                    <div>
+                        <h1 style="font-size:2.5em;margin-bottom:0.5em;">CCPorted Is Down</h1>
+                        <p style="font-size:1.2em;">CCPorted has been shut down. Check back next school year!!<br>
+                        In the meantime, <a href ="https://discord.gg/GDEFRBTT3Z">join our discord</a> to hang out.</p>
+                    </div>
+                </div>
+            `;
+            // Disable all interaction
+            // document.body.style.pointerEvents = "none";
+            document.body.style.userSelect = "none";
+            window.locked = true;
             return;
         }
-        if (isNaN(currentAmount) || currentAmount >= goalAmount) return;
-        window.locked = true;
-        // Ensure it is past May 15, 2025
-        const currentDate = new Date();
-        const lockoutDate = new Date('May 15, 2025 23:59 UTC');
-        if (currentDate < lockoutDate) return;
-        // Replace body with donation page
-        // document.body.innerHTML = '';
-        const bigContainer = document.createElement('div');
-        bigContainer.style.cssText = `
-        margin: 0;
-        padding: 0;
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #f4f4f4;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        position: fixed;
-        top: 0;
-        left: 0;
-      `;
-
-        const container = document.createElement('div');
-        container.style.cssText = `
-        background: white;
-        padding: 32px;
-        max-width: 480px;
-        border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
-        text-align: center;
-        color: #333;
-      `;
-
-        container.innerHTML = `
-        <h2 style="margin-top: 0; color: #333;">Support CCPorted</h2>
-        <p style="color: #555; font-size: 16px; margin-bottom: 16px;">
-          We did not meet our donation goal of $${goalAmount}. CCPorted may shut down unless we can raise more support. If this site has helped you access or enjoy games, please consider donating.
-        </p>
-        <p>PS: <b><a href = "https://discord.gg/GDEFRBTT3Z">HAVE YOU JOINED THE DISCORD?</a></b></p>
-        <a href="https://ko-fi.com/ccported" target="_blank" style="
-          display: block;
-          background-color: #29abe0;
-          color: white;
-          text-decoration: none;
-          padding: 12px 20px;
-          border-radius: 8px;
-          margin-bottom: 20px;
-          font-weight: bold;
-        ">Donate on Ko-fi</a>
-        <div style="margin-bottom: 12px;">
-          <p style="margin-bottom: 8px;">Or Venmo <b>@ccported</b></p>
-          <img src="/assets/images/venmo.png" alt="Venmo QR" style="width: 200px; height: auto; border-radius: 8px;" />
-        </div>
-        <p style="color: #999; font-size: 13px; margin-top: 24px;">We appreciate your support ❤️</p>
-      `;
-        bigContainer.appendChild(container);
-        bigContainer.style.position = "fixed";
-
-        const closeButton = document.createElement('button');
-        closeButton.textContent = 'Close';
-        closeButton.style.cssText = `
-          position: absolute;
-          top: 16px;
-          right: 16px;
-          background: none;
-          border: none;
-          font-size: 24px;
-          cursor: pointer;
-          color: #DEDEDE;
-        `;
-        closeButton.onclick = () => {
-            bigContainer.remove();
-            window.locked = false;
-        };
-        bigContainer.onclick = (e) => {
-            if (e.target === bigContainer) {
-                bigContainer.remove();
-                window.locked = false;
-            }
-        }
-        const escListener = (e) => {
-            if (e.key === 'Escape') {
-            bigContainer.remove();
-            document.removeEventListener('keydown', escListener);
-            window.locked = false;
-            }
-        };
-        document.addEventListener('keydown', escListener);
-        bigContainer.appendChild(closeButton);
-        bigContainer.style.zIndex = "9999";
-        bigContainer.style.width = "100%";
-        bigContainer.style.height = "100%";
-        bigContainer.style.overflow = "hidden";
-        bigContainer.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-        bigContainer.style.backdropFilter = "blur(5px)";
-        await new Promise((r) => {
-            window.addEventListener("load", r);
-        });
-        document.body.appendChild(bigContainer);
     } catch (err) {
         console.error('Failed to check donation status:', err);
     }
 }
-// enforceDonationLockout();  
+enforceDonationLockout();  

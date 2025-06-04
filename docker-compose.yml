@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  ccported:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./games:/app/games
+      - ./emdata:/app/emdata
+    environment:
+      - PORT=3000
+      - WEBSITE_URL=http://localhost:3000
+    restart: unless-stopped

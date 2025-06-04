@@ -1,0 +1,15 @@
+[Unit]
+Description=CCPorted Games Server
+After=network.target
+
+[Service]
+Type=simple
+User=YOUR_USERNAME
+WorkingDirectory=/path/to/ccported
+ExecStart=/usr/bin/npm start
+Restart=on-failure
+Environment=PORT=3000
+Environment=WEBSITE_URL=http://your-domain-or-ip:3000
+
+[Install]
+WantedBy=multi-user.target
