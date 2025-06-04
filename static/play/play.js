@@ -21,16 +21,15 @@
         const host = servers[serverID].split(",")[0];
         const path = servers[serverID].split(",")[2];
         const gameUrl = `https://${host}/${path}${gameID}/index.html`;
-        const uvUrl = __uv$config.encodeUrl(gameUrl);
-        iframe.src = __uv$config.prefix + uvUrl;
+        iframe.src = gameUrl;
 
     } else {
         const serverID = Math.floor(Math.random() * servers.length);
         const host = servers[serverID].split(",")[0];
         const path = servers[serverID].split(",")[2];
         const gameUrl = `https://${host}/${path}${gameID}/index.html`;
-        const uvUrl = __uv$config.encodeUrl(gameUrl);
-        iframe.src = __uv$config.prefix + uvUrl;
+        // const uvUrl = __uv$config.encodeUrl(gameUrl);
+        iframe.src = gameUrl;//__uv$config.prefix + uvUrl;
     }
     const req = await fetch("/servers.txt");
     const serversList = await req.text();
@@ -151,8 +150,8 @@
                 document.title = item.fName;
                 if (item.proxy) {
                     // check if on proxy host
-                    const uvUrl = __uv$config.encodeUrl(item.proxyPath);
-                    iframe.src = __uv$config.prefix + uvUrl;
+                    // const uvUrl = __uv$config.encodeUrl(item.proxyPath);
+                    // iframe.src = __uv$config.prefix + uvUrl;
                     
                     (async () => {
                         // const proxyHosts = await fetch("/phosts.txt");
